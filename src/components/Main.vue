@@ -1,6 +1,8 @@
 <template>
   <v-container>
       <v-container>
+        <h3>How long does it take a beer to cool down to a desired temperature given a surrounding temperature?</h3>
+        <p></p>
       <v-layout row wrap justify-center align-center > 
         <v-flex xs16 sm8 md6 lg4>
             <v-card class="ma-3" max-width="800px" height=600px>
@@ -70,3 +72,7 @@
     }
   }
 </script>
+
+<style>
+  h3 {text-align: center;}
+</style>
