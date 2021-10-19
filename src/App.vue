@@ -44,17 +44,17 @@
 </template>
 
 <script>
-import Main from './components/Main';
+  import Main from './components/Main';
 
-export default {
-  name: 'App',
+  export default {
+    name: 'App',
 
-  components: {
-    Main,
-  },
+    components: {
+      Main,
+    },
 
-  data: () => ({
-    //
-  }),
-};
+    data: () => ({
+      //
+    }),
+  };
 </script>
