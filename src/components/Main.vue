@@ -8,7 +8,7 @@
                     <v-card-title><v-icon left>mdi-folder-text</v-icon>Input </v-card-title>
                     <v-card-subtitle><em>To calculate the time it takes for your beer to cool down from a start temperature to the desired target temperature, please fill out all the fields below. The temperature has to be in degrees Celcius, because fuck Fahrenheit you dumb freedomunit-using noob. We btw assume atmospherical pressure.</em></v-card-subtitle>
                     <v-card-text center>
-                        <Inputside/>
+                        <Inputside @submitted="onSubmit"></Inputside>
                     </v-card-text>
                     
                 </div>
@@ -19,9 +19,7 @@
                 <div>
                     <v-card-title><v-icon left>mdi-chart-box</v-icon>Output</v-card-title>
                     <v-card-text>
-                        <div class="my-4 text-subtitle-1" height="200px">
-                        her står lidt text
-                        </div>
+                        <Outputside :input="input"></Outputside>
                     </v-card-text>
                 </div>
             </v-card> 
@@ -38,18 +36,37 @@
 <script>
 
   import Inputside from './Inputside.vue'
+  import Outputside from './Outputside.vue'
 
   export default {
     name: 'Main',
     
     components: {
       Inputside,
+      Outputside
     },
 
 
-    data: () => ({
-      
-    })
+    data() {
+      return {
+        input: {
+          submitStatus: false,
+          containerType: '',
+          startTemp: '',
+          surrTemp: '',
+          targetTemp: ''
+        }
+      }
+    },
+      methods: {
+        onSubmit (containerType, startTemp, surrTemp, targetTemp){
+          this.input.submitStatus = true
+          this.input.containerType = containerType
+          this.input.startTemp = startTemp
+          this.input.surrTemp = surrTemp
+          this.input.targetTemp = targetTemp
+        },
 
+    }
   }
 </script>
