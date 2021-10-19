@@ -12,6 +12,7 @@
                 }}</b> minutes.
             </div>
         </div>
+        <div v-if="!input.submitStatus">No input values has been recieved.</div>
 
     </v-container>
 </template>
