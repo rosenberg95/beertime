@@ -21,7 +21,10 @@
                 <div>
                     <v-card-title><v-icon left>mdi-chart-box</v-icon>Output</v-card-title>
                     <v-card-text>
-                        <Outputside :input="input"></Outputside>
+                        <Outputside 
+                          :input="input"
+                          :submittedProp="submitted">
+                        ></Outputside>
                     </v-card-text>
                 </div>
             </v-card> 
@@ -53,11 +56,13 @@
       return {
         input: {
           submitStatus: false,
+          simulationSatus: false, 
           containerType: '',
           startTemp: '',
           surrTemp: '',
           targetTemp: ''
-        }
+        },
+        submitted: 0
       }
     },
       methods: {
@@ -67,6 +72,7 @@
           this.input.startTemp = startTemp
           this.input.surrTemp = surrTemp
           this.input.targetTemp = targetTemp
+          this.submitted += 1
         },
 
     }
