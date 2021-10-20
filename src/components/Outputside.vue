@@ -17,7 +17,11 @@
         <div v-if="input.submitStatus && !simulationStatus"> 
             <br>This takes <b>{{ textTime }}</b>.
         </div>
-        
+        <div v-if="input.submitStatus && !simulationStatus"> 
+            <!-- PLOT -->
+        </div>
+
+
     </v-container>
 </template>
 
@@ -35,7 +39,9 @@
         vecTemp: [],
         finalTime: 0,
         textTime: '',
-        submittedProp: 0
+        width: 0,
+        height: 0,
+        mass: 0,
     }),
     watch: {
         deep: true,
@@ -46,10 +52,7 @@
         },
         finalTime(newTime, oldTime){
             console.log(`Final time changed from ${oldTime} to ${newTime}`)
-            var d
-            var h 
-            var min
-            var s
+            var d, h, min, s
             
             if (newTime < 30) {                 // Seconds
                 this.textTime = newTime + " s" 
@@ -83,6 +86,27 @@
         submittedProp(newVal){
             console.log("Number of submits: ", newVal)
             this.simulationStatus = true
+            if (this.input.containerType == 'Small can (0.25 L)') {
+                this.width = 0.0663
+                this.height = 0.092
+            }
+            if (this.input.containerType == 'Medium can (0.33 L)') {
+                this.width = 0.0663
+                this.height = 0.1152
+            }
+            if (this.input.containerType == 'Small bottle (0.33 L)') {
+                // https://www.univerre.ch/en/product/beer-bottle-crown-33cl-long-neck-black/ 
+                // assuming cylindrical, width adjusted:
+                //
+                // V = pi*h*r^2 => r = sqrt(V/(pi*h)), w = 2r => w = 2*sqrt(V/(pi*h))
+                this.height = 0.2265
+                this.width = 2*Math.sqrt(0.00033/(Math.PI*this.height))
+            }
+            if (this.input.containerType == 'Large bottle (0.75 L)') {
+                this.height = 0.300
+                this.width = 2*Math.sqrt(0.00075/(Math.PI*this.height))
+            }
+
             this.run()
         },
     
@@ -91,19 +115,20 @@
         run(){
             this.vecTime = []
             this.vecTemo = []
-            this.finalTime = this.simmulation(parseFloat(this.input.startTemp), parseFloat(this.input.surrTemp), parseFloat(this.input.targetTemp)) // Kør simulering
+            this.finalTime = this.simmulation(
+                parseFloat(this.input.startTemp),         
+                parseFloat(this.input.surrTemp), 
+                parseFloat(this.input.targetTemp)
+                ) 
             // Lav plot
             console.log("Simulation done.")
             
         },
         diffTemperature (t, T){ // assuming cooling
-            const W = 0.0663        // TODO type dependant
-            const H = 0.1152        // TODO type dependant
-
-            const r = W/2
-            const SA = 2*Math.PI*r*H + 2*Math.PI*r*r
-            const k = 0.5
-            return k*SA*(T-t)/H
+            const r = this.width/2
+            const SA = 2*Math.PI*r*this.height + 2*Math.PI*r*r
+            const k = 0.5       // hvor fanden kom det her fra?
+            return k*SA*(T-t)/this.height
         },
         simmulation ( startTemp, surroundTemp, targetTemp ) {
             var currentTemp = startTemp
