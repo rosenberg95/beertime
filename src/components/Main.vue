@@ -9,7 +9,7 @@
                 <div>
                     <v-card-title><v-icon left>mdi-folder-text</v-icon>Input </v-card-title>
                     <v-card-subtitle><em>To calculate the time it takes for your beer to cool down from a start temperature to the desired target temperature, please fill out all the fields below. The temperature has to be in degrees Celcius, because fuck Fahrenheit you dumb freedomunit-using noob. We btw assume atmospherical pressure.</em></v-card-subtitle>
-                    <v-card-text center>
+                    <v-card-text>
                         <Inputside @submitted="onSubmit"></Inputside>
                     </v-card-text>
                     
@@ -21,10 +21,7 @@
                 <div>
                     <v-card-title><v-icon left>mdi-chart-box</v-icon>Output</v-card-title>
                     <v-card-text>
-                        <Outputside 
-                          :input="input"
-                          :submittedProp="submitted">
-                        ></Outputside>
+                        <Outputside :input="input" :submittedProp="submitted"></Outputside>
                     </v-card-text>
                 </div>
             </v-card> 
@@ -66,13 +63,15 @@
       }
     },
       methods: {
-        onSubmit (containerType, startTemp, surrTemp, targetTemp){
-          this.input.submitStatus = true
-          this.input.containerType = containerType
-          this.input.startTemp = startTemp
-          this.input.surrTemp = surrTemp
-          this.input.targetTemp = targetTemp
-          this.submitted += 1
+        onSubmit (containerType, startTemp, surrTemp, targetTemp, pass){
+          if (pass) {
+            this.input.submitStatus = true
+            this.input.containerType = containerType
+            this.input.startTemp = startTemp
+            this.input.surrTemp = surrTemp
+            this.input.targetTemp = targetTemp
+            this.submitted += 1
+          }
         },
 
     }

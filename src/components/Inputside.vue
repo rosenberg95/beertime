@@ -49,7 +49,7 @@
                 id="targetTemp"
                 v-model="targetTemp"
                 type="float"
-                :rules="numberRule"
+                :rules=[compareTemperatures]
                 suffix="°C"
                 required> </v-text-field>
             </v-flex>
@@ -89,10 +89,22 @@ export default {
     },
     computed: {
         // TODO: lav en compareTemperatures() rule: target temp skal være mellem starttemp og surrtemp
+        compareTemperatures(){
+            if (this.startTemp >= this.targetTemp && this.targetTemp >= this.surrTemp) {
+                if (!isNaN(parseFloat(this.targetTemp)) && this.targetTemp >= -273.15 && this.targetTemp <= 5500) {
+                    return true
+                } else {
+                    return 'Number has to be between absolute zero and the surface temperature of the Sun'
+                }                
+            } else {
+                return 'Invalid temperatures. Target has to be between Start and Surround, and can (currently) only cool'
+            }
+        }
     },
     methods: {
         simuler () {
-            this.$emit('submitted', this.containerType, this.startTemp, this.surrTemp, this.targetTemp)
+            var pass = this.compareTemperatures && !(this.containerType == '')
+            this.$emit('submitted', this.containerType, this.startTemp, this.surrTemp, this.targetTemp, pass)
         }
     }
 

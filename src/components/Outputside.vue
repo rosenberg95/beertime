@@ -44,7 +44,7 @@
         width: 0,
         height: 0,
         mass: 0,
-        gradient: null,
+        // gradient: null,
     }),
     watch: {
         deep: true,
@@ -114,7 +114,6 @@
                 this.mass = 0.75
             }
 
-
             this.run()
             setTimeout(() => {console.log("Timeout for plot"); this.plot()}, 250)
             setTimeout(() => {console.log("Timeout for end"); this.simulationStatus = false}, 500)
@@ -122,7 +121,6 @@
         },
     },
     mounted () {      
-        
         // this.gradient = this.$refs.canvas
         //     .getContext("2d")
         //     .createLinearGradient(0, 0, 0, 450);
@@ -144,10 +142,10 @@
                 parseFloat(this.input.targetTemp)
                 )
         },
-        diffTemperature (t, T){ // assuming cooling
+        diffTemperature (t, T){     // assuming cooling
             const r = this.width/2
-            const SA = 2*Math.PI*r*this.height + 2*Math.PI*r*r
-            const k = 0.5       // hvor fanden kom det her fra?
+            const SA = 2*Math.PI*r*this.height + 2*Math.PI*r*r      // Surface area
+            const k = 0.5           // hvor fanden kom det her fra?
             return k*SA*(T-t)/this.height
         },
         simmulation ( startTemp, surroundTemp, targetTemp ) {
@@ -193,7 +191,6 @@
                 datasets: [{
                     data: Y,
                     backgroundColor: "rgba(1, 116, 188, 0.05)",
-                    // backgroundColor: this.gradient,
                     pointBorderColor: "rgba(1, 116, 188, 0.75)",
                     borderColor: "rgba(1, 116, 188, 0.50)",
                     label: "Show line",
@@ -201,8 +198,8 @@
                 }
                 ],
                 legendSettings: {visible: false},
-                title: "Pissemand",
-                xAxisID: "Time"
+                title: "Pissemand",     // tror ikke de her virker
+                xAxisID: "Time"         // tror ikke de her virker
             }
         }
     }
