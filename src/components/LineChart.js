@@ -16,11 +16,11 @@ export default {
           xAxes: [{
             gridLines: {display: true }
           }],
-          // zoom: {
-          //   enableMouseWheelZooming: true,
-          //   enablePinchZooming: true,
-          //   enableSelectionZooming: true
-          // },
+          zoom: {
+            enableMouseWheelZooming: true,
+            enablePinchZooming: true,
+            enableSelectionZooming: true
+          },
           legend: {display: true},
           label: {display: false},
           responsive: true,

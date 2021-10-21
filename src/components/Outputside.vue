@@ -9,8 +9,6 @@
                 indeterminate
             >Simulating</v-progress-circular>
         </div>
-
-
         <div v-if="input.submitStatus && !simulationStatus">
             {{ input.containerType }} containing {{ input.startTemp }} °C beer in a {{ input.surrTemp }} °C environment has a desired temperature of {{input.targetTemp}} °C.
         </div>
@@ -18,7 +16,7 @@
             <br>This takes <b>{{ textTime }}</b> ({{(finalTime/60).toFixed(2)}} minutes).
         </div>
         <div v-if="input.submitStatus && !simulationStatus">
-            <line-chart :chartData="datacollection"></line-chart>
+            <div fitParent=true><line-chart :chartData="datacollection"></line-chart></div>
         </div>
 
 
