@@ -16,7 +16,7 @@
             <br>This takes <b>{{ textTime }}</b> ({{(finalTime/60).toFixed(2)}} minutes).
         </div>
         <div v-if="input.submitStatus && !simulationStatus">
-            <div fitParent=true><line-chart :chartData="datacollection"></line-chart></div>
+            <div><line-chart :chartData="datacollection" :height="300"></line-chart></div>
         </div>
 
 
@@ -114,13 +114,15 @@
                 this.mass = 0.75
             }
 
+
             this.run()
             setTimeout(() => {console.log("Timeout for plot"); this.plot()}, 250)
             setTimeout(() => {console.log("Timeout for end"); this.simulationStatus = false}, 500)
 
         },
     },
-    mounted () {
+    mounted () {      
+        
         // this.gradient = this.$refs.canvas
         //     .getContext("2d")
         //     .createLinearGradient(0, 0, 0, 450);
@@ -128,7 +130,8 @@
         // this.gradient.addColorStop(0, "rgba(0, 231, 255, 0.9)");
         // this.gradient.addColorStop(0.5, "rgba(0, 231, 255, 0.25)");
         // this.gradient.addColorStop(1, "rgba(0, 231, 255, 0)");
-        
+
+
         this.plot()
     },
     methods: {
@@ -190,9 +193,10 @@
                 datasets: [{
                     data: Y,
                     // backgroundColor: "transparent",
-                    // backgroundColor: this.gradient,
+                    backgroundColor: this.gradient,
                     pointBorderColor: "rgba(1, 116, 188, 0.75)",
                     borderColor: "rgba(1, 116, 188, 0.50)",
+                    label: "Show line",
                     showLine: true,
                     fill: false,
                 }
