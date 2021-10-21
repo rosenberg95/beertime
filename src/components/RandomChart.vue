@@ -28,7 +28,7 @@
           datasets: [
             {
               label: 'Data One',
-              backgroundColor: '#f87979',
+              backgroundColor: '#517FFF',
               data: [this.getRandomInt(), this.getRandomInt()]
             }, {
               label: 'Data One',

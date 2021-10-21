@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <div v-if="!input.submitStatus" class="noinput">No input values has been recieved.</div>
-        <div v-if="simulationStatus" class="spinner"> 
+        <div v-if="simulationStatus" class="spinner">
             <v-progress-circular
                 :size="150"
                 :width="10"
@@ -11,30 +11,34 @@
         </div>
 
 
-        <div v-if="input.submitStatus && !simulationStatus"> 
+        <div v-if="input.submitStatus && !simulationStatus">
             {{ input.containerType }} containing {{ input.startTemp }} °C beer in a {{ input.surrTemp }} °C environment has a desired temperature of {{input.targetTemp}} °C.
         </div>
-        <div v-if="input.submitStatus && !simulationStatus"> 
-            <br>This takes <b>{{ textTime }}</b>.
+        <div v-if="input.submitStatus && !simulationStatus">
+            <br>This takes <b>{{ textTime }}</b> ({{(finalTime/60).toFixed(2)}} minutes).
         </div>
-        <div v-if="input.submitStatus && !simulationStatus"> 
-            <!-- PLOT -->
+        <div v-if="input.submitStatus && !simulationStatus">
+            <line-chart :chartData="datacollection"></line-chart>
         </div>
+
 
 
     </v-container>
 </template>
 
 <script>
-// import RandomChart from './RandomChart.vue';
-  export default {
-//   components: { RandomChart },
+  import LineChart from './LineChart.js'
+    export default {
+    components: {
+      LineChart,
+    },
     name: 'Outputside',
     props: ['input','submittedProp'],
 
     data: () => ({
         simulationStatus: false,
         txt: '',
+        datacollection: null,
         vecTime: [],
         vecTemp: [],
         finalTime: 0,
@@ -45,7 +49,7 @@
     }),
     watch: {
         deep: true,
-        immediate: true, 
+        immediate: true,
         simulationStatus(newSimStat, oldSimStat){
             this.txt = `sim stat changed from ${oldSimStat} to ${newSimStat}`
             console.log(this.txt)
@@ -53,9 +57,9 @@
         finalTime(newTime, oldTime){
             console.log(`Final time changed from ${oldTime} to ${newTime}`)
             var d, h, min, s
-            
+
             if (newTime < 30) {                 // Seconds
-                this.textTime = newTime + " s" 
+                this.textTime = newTime + " s"
             } else if (newTime < 3600) {        // Minutes
                 min = Math.floor(newTime/60)
                 if (min*60 < newTime){
@@ -78,7 +82,7 @@
                     h = newTime/3600 - d*24
                     d == 1 ? this.textTime = d + " day and " + h.toFixed(0) + " hours" : this.textTime = d + " days and " + h.toFixed(0) + " hours"
                 } else {
-                    d == 1 ? this.textTime = d + " day" : this.textTime = d + " days" 
+                    d == 1 ? this.textTime = d + " day" : this.textTime = d + " days"
                 }
             }
 
@@ -88,41 +92,47 @@
             this.simulationStatus = true
             if (this.input.containerType == 'Small can (0.25 L)') {
                 this.width = 0.0663
-                this.height = 0.092
+                this.height = 0.092 
+                this.mass = 0.25
             }
             if (this.input.containerType == 'Medium can (0.33 L)') {
                 this.width = 0.0663
                 this.height = 0.1152
+                this.mass = 0.33
             }
             if (this.input.containerType == 'Small bottle (0.33 L)') {
-                // https://www.univerre.ch/en/product/beer-bottle-crown-33cl-long-neck-black/ 
+                // https://www.univerre.ch/en/product/beer-bottle-crown-33cl-long-neck-black/
                 // assuming cylindrical, width adjusted:
                 //
                 // V = pi*h*r^2 => r = sqrt(V/(pi*h)), w = 2r => w = 2*sqrt(V/(pi*h))
                 this.height = 0.2265
                 this.width = 2*Math.sqrt(0.00033/(Math.PI*this.height))
+                this.mass = 0.33
             }
             if (this.input.containerType == 'Large bottle (0.75 L)') {
                 this.height = 0.300
                 this.width = 2*Math.sqrt(0.00075/(Math.PI*this.height))
+                this.mass = 0.75
             }
 
             this.run()
+            setTimeout(() => {console.log("Timeout for plot"); this.plot()}, 250)
+            setTimeout(() => {console.log("Timeout for end"); this.simulationStatus = false}, 500)
+
         },
-    
+    },
+    mounted () {
+        this.plot()
     },
     methods: {
         run(){
             this.vecTime = []
             this.vecTemo = []
             this.finalTime = this.simmulation(
-                parseFloat(this.input.startTemp),         
-                parseFloat(this.input.surrTemp), 
+                parseFloat(this.input.startTemp),
+                parseFloat(this.input.surrTemp),
                 parseFloat(this.input.targetTemp)
-                ) 
-            // Lav plot
-            console.log("Simulation done.")
-            
+                )
         },
         diffTemperature (t, T){ // assuming cooling
             const r = this.width/2
@@ -133,19 +143,18 @@
         simmulation ( startTemp, surroundTemp, targetTemp ) {
             var currentTemp = startTemp
             var time = 0
-            const delta = 0.001
-            const m = 0.33          // TODO type dependant
+            const delta = 0.01
             const C = 4200
             this.vecTime = [ 0 ]
             this.vecTemp = [ startTemp ]
-            
+
             console.log("Simulation initialized")
 
             while (currentTemp - targetTemp > delta) {
                 time += 1
                 var dT = this.diffTemperature(currentTemp, surroundTemp)
-                var difference = dT/(m*C)
-                currentTemp = currentTemp + difference 
+                var difference = dT/(this.mass*C)
+                currentTemp = currentTemp + difference
                 this.vecTime.push(time/60)           // For plot
                 this.vecTemp.push(currentTemp)       // For plot
 
@@ -153,8 +162,36 @@
                     break
                 }
             }
-            setTimeout(() => {console.log("Timeout"); this.simulationStatus = false}, 500)
             return time
+        },
+        plot(){
+            var nticks = 10                 // Number of displayed ticks/increments
+            const N = this.vecTemp.length 
+            var X = []
+            var Y = []
+            var Xlabels = []
+            const step = Math.floor(N/nticks)
+
+            for (let i = 0; i <= nticks; i++) {
+                X.push( this.vecTime[i*step] )
+                Y.push( this.vecTemp[i*step] )
+                Xlabels.push( X[i].toFixed(2) )
+            }   
+
+            this.datacollection = {
+                labels: Xlabels ,
+                datasets: [{
+                    data: Y,
+                    backgroundColor: "transparent",
+                    borderColor: "#3e95cd",
+                    showLine: true,
+                    fill: false,
+                }
+                ],
+                legendSettings: {visible: false},
+                title: "Pissemand",
+                xAxisID: "Time"
+            }
         }
     }
   };

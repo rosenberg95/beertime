@@ -16,8 +16,8 @@
                 </div>
             </v-card> 
         </v-flex>
-        <v-flex xs16 sm8 md6 lg4>
-            <v-card class="ma-3" max-width="800px" height=600px>
+        <v-flex xs16 sm10 md8 lg6>
+            <v-card class="ma-3" max-width="1000px" height=800px>
                 <div>
                     <v-card-title><v-icon left>mdi-chart-box</v-icon>Output</v-card-title>
                     <v-card-text>
