@@ -37,13 +37,14 @@
         simulationStatus: false,
         txt: '',
         datacollection: null,
-        vecTime: [],
-        vecTemp: [],
+        vecTime: [0],
+        vecTemp: [0],
         finalTime: 0,
         textTime: '',
         width: 0,
         height: 0,
         mass: 0,
+        gradient: null,
     }),
     watch: {
         deep: true,
@@ -120,6 +121,14 @@
         },
     },
     mounted () {
+        // this.gradient = this.$refs.canvas
+        //     .getContext("2d")
+        //     .createLinearGradient(0, 0, 0, 450);
+        
+        // this.gradient.addColorStop(0, "rgba(0, 231, 255, 0.9)");
+        // this.gradient.addColorStop(0.5, "rgba(0, 231, 255, 0.25)");
+        // this.gradient.addColorStop(1, "rgba(0, 231, 255, 0)");
+        
         this.plot()
     },
     methods: {
@@ -180,8 +189,10 @@
                 labels: Xlabels ,
                 datasets: [{
                     data: Y,
-                    backgroundColor: "transparent",
-                    borderColor: "#3e95cd",
+                    // backgroundColor: "transparent",
+                    // backgroundColor: this.gradient,
+                    pointBorderColor: "rgba(1, 116, 188, 0.75)",
+                    borderColor: "rgba(1, 116, 188, 0.50)",
                     showLine: true,
                     fill: false,
                 }
