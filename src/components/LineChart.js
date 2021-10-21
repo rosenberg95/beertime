@@ -16,13 +16,8 @@ export default {
           xAxes: [{
             gridLines: {display: true }
           }],
-          zoom: {
-            enableMouseWheelZooming: true,
-            enablePinchZooming: true,
-            enableSelectionZooming: true
-          },
           legend: {display: true},
-          label: {display: false},
+          label: {display: true},
           responsive: true,
           maintainAspectRatio: false,
         }

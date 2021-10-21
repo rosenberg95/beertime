@@ -13,7 +13,7 @@
             {{ input.containerType }} containing {{ input.startTemp }} °C beer in a {{ input.surrTemp }} °C environment has a desired temperature of {{input.targetTemp}} °C.
         </div>
         <div v-if="input.submitStatus && !simulationStatus">
-            <br>This takes <b>{{ textTime }}</b> ({{(finalTime/60).toFixed(2)}} minutes).
+            <br>This takes <b>{{ textTime }}</b> ({{(finalTime/60).toFixed(0)}} minutes).
         </div>
         <div v-if="input.submitStatus && !simulationStatus">
             <div><line-chart :chartData="datacollection" :height="300"></line-chart></div>
@@ -153,7 +153,7 @@
         simmulation ( startTemp, surroundTemp, targetTemp ) {
             var currentTemp = startTemp
             var time = 0
-            const delta = 0.01
+            const delta = 0.1
             const C = 4200
             this.vecTime = [ 0 ]
             this.vecTemp = [ startTemp ]
@@ -185,20 +185,19 @@
             for (let i = 0; i <= nticks; i++) {
                 X.push( this.vecTime[i*step] )
                 Y.push( this.vecTemp[i*step] )
-                Xlabels.push( X[i].toFixed(2) )
+                Xlabels.push( X[i].toFixed(0) )
             }   
 
             this.datacollection = {
                 labels: Xlabels ,
                 datasets: [{
                     data: Y,
-                    // backgroundColor: "transparent",
-                    backgroundColor: this.gradient,
+                    backgroundColor: "rgba(1, 116, 188, 0.05)",
+                    // backgroundColor: this.gradient,
                     pointBorderColor: "rgba(1, 116, 188, 0.75)",
                     borderColor: "rgba(1, 116, 188, 0.50)",
                     label: "Show line",
                     showLine: true,
-                    fill: false,
                 }
                 ],
                 legendSettings: {visible: false},
