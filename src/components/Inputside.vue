@@ -1,6 +1,6 @@
 <template>
     <v-container>
-    <form @submit.prevent="simuler">
+    <form @submit.prevent="simuler"  >
         <v-layout row>
             <v-flex xs8>
                 <v-select
@@ -49,7 +49,7 @@
                 id="targetTemp"
                 v-model="targetTemp"
                 type="float"
-                :rules=[compareTemperatures]
+                :rules="numberRule"
                 suffix="°C"
                 required> </v-text-field>
             </v-flex>
@@ -90,19 +90,23 @@ export default {
     computed: {
         // TODO: lav en compareTemperatures() rule: target temp skal være mellem starttemp og surrtemp
         compareTemperatures(){
-            if (this.startTemp >= this.targetTemp && this.targetTemp >= this.surrTemp) {
-                if (!isNaN(parseFloat(this.targetTemp)) && this.targetTemp >= -273.15 && this.targetTemp <= 5500) {
-                    return true
-                } else {
-                    return 'Number has to be between absolute zero and the surface temperature of the Sun'
-                }                
+            if (parseFloat(this.targetTemp) > parseFloat(this.startTemp)) {         // user wants warm beer
+                console.log("A: " + this.targetTemp + " > " + this.startTemp)
+                alert("The app can only cool beers. Make sure that: \n Start Temperature ≥ Target Temperature ≥ Surrounding Temperature")
+                return false
+            } else if (parseFloat(this.targetTemp) < parseFloat(this.surrTemp)) {   // user wants unachievable temperature
+                console.log("B : " + this.targetTemp  + " < " + this.surrTemp) 
+                alert("The app can only cool beers. Make sure that: \n Start Temperature ≥ Target Temperature ≥ Surrounding Temperature")
+                return false
             } else {
-                return 'Invalid temperatures. Target has to be between Start and Surround, and can (currently) only cool'
+                return true
             }
         }
     },
     methods: {
         simuler () {
+            console.log("compareTemperatures giver: ", this.compareTemperatures)
+            console.log("containerType giver: ", this.containerType)
             var pass = this.compareTemperatures && !(this.containerType == '')
             this.$emit('submitted', this.containerType, this.startTemp, this.surrTemp, this.targetTemp, pass)
         }
