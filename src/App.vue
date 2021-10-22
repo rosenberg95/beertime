@@ -13,11 +13,11 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://poulrosenberg.dk"
+        href="https://github.com/rosenberg95/beertime/wiki"
         target="_blank"
         text
       >
-        <span class="mr-2">My Live Resume</span>
+        <span class="mr-2">Documentation</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
