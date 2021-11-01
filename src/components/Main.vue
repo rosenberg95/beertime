@@ -8,7 +8,7 @@
             <v-card class="ma-2" max-width="1000px" height=600px>
                 <div>
                     <v-card-title><v-icon left>mdi-folder-text</v-icon>Input </v-card-title>
-                    <v-card-subtitle><em>To calculate the time it takes for your beer to cool down from a start temperature to the desired target temperature, please fill out all the fields below. The temperature has to be in degrees Celcius, because fuck Fahrenheit you dumb freedomunit-using noob. We btw assume atmospherical pressure.</em></v-card-subtitle>
+                    <v-card-subtitle><em>To calculate the time it takes for your beer to cool down from a start temperature to the desired target temperature, please fill out all the fields below in degrees Celcius.</em></v-card-subtitle>
                     <v-card-text v class="tis">
                         <Inputside @submitted="onSubmit"></Inputside>
                     </v-card-text>
