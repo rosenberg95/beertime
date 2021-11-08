@@ -145,14 +145,14 @@
         diffTemperature (t, T){     // assuming cooling
             const r = this.width/2
             const SA = 2*Math.PI*r*this.height + 2*Math.PI*r*r      // Surface area
-            const k = 0.5           // hvor fanden kom det her fra?
+            const k = 0.6           // Vand ved https://da.wikipedia.org/wiki/Specifik_varmeledningsevne 
             return k*SA*(T-t)/this.height
         },
         simmulation ( startTemp, surroundTemp, targetTemp ) {
             var currentTemp = startTemp
             var time = 0
             const delta = 0.1
-            const C = 4200
+            const C = 4184
             this.vecTime = [ 0 ]
             this.vecTemp = [ startTemp ]
 
@@ -160,8 +160,8 @@
 
             while (currentTemp - targetTemp > delta) {
                 time += 1
-                var dT = this.diffTemperature(currentTemp, surroundTemp)
-                var difference = dT/(this.mass*C)
+                var dQ = this.diffTemperature(currentTemp, surroundTemp)
+                var difference = dQ/(this.mass*C)
                 currentTemp = currentTemp + difference
                 this.vecTime.push(time/60)           // For plot
                 this.vecTemp.push(currentTemp)       // For plot
@@ -173,7 +173,7 @@
             return time
         },
         plot(){
-            var nticks = 10                 // Number of displayed ticks/increments
+            var nticks = 10                         // Number of displayed ticks/increments
             const N = this.vecTemp.length 
             var X = []
             var Y = []
